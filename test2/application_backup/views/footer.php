@@ -1,0 +1,1 @@
+<?php echo "</br>ini footer frontend" ?>

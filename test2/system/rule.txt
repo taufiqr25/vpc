@@ -1,0 +1,9 @@
+ubah session
+ganti $sess jadi $data['sess']
+hapus sess nama dan role
+1. $data['sess']
+2. $act = 'nama_modul'
+3. bentuk halaman berhasil
+4. tombol hapus kasi modal
+5. warna tombol submit dan batal di add dan edit
+6. bentuk tombol di action

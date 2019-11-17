@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /cariyuk/api 
+# Only do the rewrite under the condition that the requested URL isn't a (real) file.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /cariyuk/api/index.php?/$1 [L]
+</IfModule>
