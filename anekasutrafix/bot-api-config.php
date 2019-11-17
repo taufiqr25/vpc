@@ -1,5 +1,5 @@
 <?php
 
-$token = '457702324:AAHA8Ddo1VTSOEMpzItTgkGcjJ5sr6TjeDw';
+$token = '1042982923:AAHukRwZIrUPJ3TACOrAhyy8QsBuhNm8dQc';
 $debug = false;
 
