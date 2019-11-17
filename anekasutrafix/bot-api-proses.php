@@ -114,7 +114,7 @@ function prosesApiMessage($sumber)
         	$chatid = $message['chat']['id'];
 
         	$sql_get_variabel = "select * from variabel where var_id=$chatid";
-			$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+			$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 			$hargabarang = $data_variabel['hargabarang2'];
 			$gambar = $data_variabel['gambar'];
 			$nama = $data_variabel['nama'];
@@ -136,7 +136,7 @@ function prosesApiMessage($sumber)
 			$nono = $data_variabel['no_ganti'];
 
         	$sql_ceknama = "select * from konsumen where no_hp='$nono'";
-			$data_ceknama = mysql_fetch_assoc(mysql_query($sql_ceknama));
+			$data_ceknama = mysqli_fetch_assoc(mysqli_query($con,$sql_ceknama));
 			$adanama = $data_ceknama['nama_konsumen'];
 			$idkonsumen = $data_ceknama['id_konsumen'];
 			$ongkir = $data_ceknama['ongkir'];
@@ -145,21 +145,21 @@ function prosesApiMessage($sumber)
 			if(empty($adanama))
 			{
 				$sql3 = "INSERT INTO `konsumen`(`id_konsumen`, `id_order`, `nama_konsumen`, `alamat_konsumen`, `provinsi`, `kabupaten`, `id_telegram`,`no_hp`,`ongkir`) VALUES (Null,$idorder,'$nama','$alamat','$prov','$kabup','$chatid','$nohp',$ongkir2)";
-				$result3 = mysql_query($sql3);
+				$result3 = mysqli_query($con,$sql3);
 
 				$sql_id_kons = "select * from konsumen where nama_konsumen='$nama' && no_hp='$nohp'";
-				$data_cekid = mysql_fetch_assoc(mysql_query($sql_id_kons));
+				$data_cekid = mysqli_fetch_assoc(mysqli_query($con,$sql_id_kons));
 				$idkonsumen9 = $data_cekid['id_konsumen'];
 
 				$sql = "INSERT INTO `order`(`id_order`, `id_sub_produk`, `id_ukuran`,`id_konsumen`, `id_bank`,`tanggal_orderan`,`status_pemesanan`,`no_resi`) VALUES ($idorder,$idproduk2,$ukuran,$idkonsumen9,$idbank,CURRENT_TIMESTAMP,'Belum Dikonfirmasi',Null)";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				$sql2 = "INSERT INTO `detail_order`(`id_order`,`kuantitas`,`total`) VALUES ($idorder,$jumlahpesanan,$total)";
-				$result2 = mysql_query($sql2);
+				$result2 = mysqli_query($con,$sql2);
 				$sql4 = "UPDATE `sub_produk` SET `jumlah_sub_produk`= jumlah_sub_produk - $jumlahpesanan WHERE id_sub_produk=$idproduk2";
-				$result4 = mysql_query($sql4);
+				$result4 = mysqli_query($con,$sql4);
 				print_r($sql4);
 				$sql8 = "INSERT INTO `membayar`(`id_pembayaran`, `id_bank`, `id_order`, `status`, `gambar_bukti`) VALUES ('Null','Null',$idorder,1,'https://fiqri.tatkj.poliupg.ac.id/webtoko/gambar/lunas.png')";
-				$result8 = mysql_query($sql8);
+				$result8 = mysqli_query($con,$sql8);
 				$text = "Terima Kasih telah melakukan pemesanan di Toko Aneka Sutra\n\nUntuk mengecek status pesanan, silahkan menggunakan kode pemesanan '$idorder'";
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
 				deleteApiMsg($chatid,$messageidkab);
@@ -173,18 +173,18 @@ function prosesApiMessage($sumber)
 
 			elseif (!empty($adanama) && $ganti == 1) {
 				$sql = "INSERT INTO `order`(`id_order`, `id_sub_produk`, `id_ukuran`,`id_konsumen`, `id_bank`,`tanggal_orderan`,`status_pemesanan`,`no_resi`) VALUES ($idorder,$idproduk2,$ukuran,$idkonsumen,$idbank,CURRENT_TIMESTAMP,'Belum Dikonfirmasi',Null)";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				print_r("\n\n".$sql."");
 				$sql2 = "INSERT INTO `detail_order`(`id_detail`,`id_order`,`kuantitas`,`total`) VALUES (NULL,$idorder,$jumlahpesanan,$total)";
-				$result2 = mysql_query($sql2);
+				$result2 = mysqli_query($con,$sql2);
 				print_r("\n\n".$sql2."");
 				$sql3 = "UPDATE `konsumen` SET `id_telegram`= '$chatid' WHERE id_konsumen=$idkonsumen";
-				$result3 = mysql_query($sql3);
+				$result3 = mysqli_query($con,$sql3);
 				$sql4 = "UPDATE `sub_produk` SET `jumlah_sub_produk`= jumlah_sub_produk - $jumlahpesanan WHERE id_sub_produk=$idproduk2";
-				$result4 = mysql_query($sql4);
+				$result4 = mysqli_query($con,$sql4);
 				print_r($sql4);
 				$sql8 = "INSERT INTO `membayar`(`id_pembayaran`, `id_bank`, `id_order`, `status`, `gambar_bukti`) VALUES ('Null','Null',$idorder,1,'https://fiqri.tatkj.poliupg.ac.id/webtoko/gambar/lunas.png')";
-				$result8 = mysql_query($sql8);
+				$result8 = mysqli_query($con,$sql8);
 				$text = "Terima Kasih telah melakukan pemesanan di Toko Aneka Sutra\n\nUntuk mengecek status pesanan, silahkan menggunakan kode pemesanan '$idorder'";
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
 				deleteApiMsg($chatid,$messageidkab);
@@ -199,18 +199,18 @@ function prosesApiMessage($sumber)
 			elseif (!empty($adanama) && $ganti == 2) 
 			{
 				$sql = "INSERT INTO `order`(`id_order`, `id_sub_produk`, `id_ukuran`,`id_konsumen`, `id_bank`,`tanggal_orderan`,`status_pemesanan`,`no_resi`) VALUES ($idorder,$idproduk2,$ukuran,$idkonsumen,$idbank,CURRENT_TIMESTAMP,'Belum Dikonfirmasi',Null)";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				print_r("\n\n".$sql."");
 				$sql2 = "INSERT INTO `detail_order`(`id_detail`,`id_order`,`kuantitas`,`total`) VALUES (NULL,$idorder,$jumlahpesanan,$total)";
-				$result2 = mysql_query($sql2);
+				$result2 = mysqli_query($con,$sql2);
 				print_r("\n\n".$sql2."");
 				$sql3 = "UPDATE `konsumen` SET `nama_konsumen`='$nama',`alamat_konsumen`='$alamat',`no_hp`='$nohp',`provinsi`='$prov',`kabupaten`='$kabup',`ongkir`=$ongkir2,id_telegram='$chatid' WHERE `id_konsumen`='$idkonsumen'";
-				$result3 = mysql_query($sql3);
+				$result3 = mysqli_query($con,$sql3);
 				$sql4 = "UPDATE `sub_produk` SET `jumlah_sub_produk`= jumlah_sub_produk - $jumlahpesanan WHERE id_sub_produk=$idproduk2";
-				$result4 = mysql_query($sql4);
+				$result4 = mysqli_query($con,$sql4);
 				print_r($sql4);
 				$sql8 = "INSERT INTO `membayar`(`id_pembayaran`, `id_bank`, `id_order`, `status`, `gambar_bukti`) VALUES ('Null','Null',$idorder,1,'https://fiqri.tatkj.poliupg.ac.id/webtoko/gambar/lunas.png')";
-				$result8 = mysql_query($sql8);
+				$result8 = mysqli_query($con,$sql8);
 			$text = "Terima Kasih telah melakukan pemesanan di Toko Aneka Sutra\n\nUntuk mengecek status pesanan, silahkan menggunakan kode pemesanan '$idorder'";
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
 				deleteApiMsg($chatid,$messageidkab);
@@ -321,7 +321,7 @@ function prosesPesanPhoto($message){
 	if(!empty($fileid))
 	{
 		$sql_get_variabel = "select * from variabel where var_id=$chatid";
-		$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+		$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 		$rekeningtuj = $data_variabel['rekeningtuj'];
 		$idorderkonfirmasi = $data_variabel['idkonf'];
 		$text2 = "Terima kasih telah melakukan konfirmasi pesanan\nPesanan anda akan segera kami proses setelah admin mengecek konfirmasi anda\nUntuk mengecek status pemesanan silahkan memilih menu Status Pemesanan";
@@ -337,16 +337,16 @@ function prosesPesanPhoto($message){
 
 		$idfotofix = 'https://fiqri.tatkj.poliupg.ac.id/anekasutrafix/gambar_bukti/'.$namatambahanfix2.'';
 		 $sql = "SELECT `id_bank` FROM `rekening_tujuan` WHERE nomor_rekening = $rekeningtuj";
-		$result = mysql_query($sql);
+		$result = mysqli_query($con,$sql);
 		print_r($sql);
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$idbankatm = $data['id_bank'];
 		print_r("\n\n".$idbankatm."");
 		$sql1 = "INSERT INTO `membayar`(`id_pembayaran`, `id_bank`, `id_order`, `status`, `gambar_bukti`) VALUES ('Null',$idbankatm,$idorderkonfirmasi,Null,'$idfotofix')";
-		$result1 = mysql_query($sql1);
+		$result1 = mysqli_query($con,$sql1);
 		print_r($sql1);
 		$sql2 = "UPDATE `order` SET id_bank = $idbankatm WHERE id_order = $idorderkonfirmasi";
-		$result2 = mysql_query($sql2);
+		$result2 = mysqli_query($con,$sql2);
 		print_r($sql2);
 		sendApiMsg($chatid,$text2);
 	}
@@ -446,18 +446,18 @@ function prosesPesanTeks($message)
 		case $pesan == 'Status Pemesanan':
 			$text = "Masukkan Kode Pemesanan 👇";
 			$sql_get_status = "select * from status where id='$chatid'";
-			$data_status = mysql_fetch_assoc(mysql_query($sql_get_status));
+			$data_status = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status));
 			$idchat = $data_status['id'];
 			if(!empty($idchat))
 			{
 				$sql3 = "update status set status='9' where id='$chatid'";
-				mysql_query($sql3);
+				mysqli_query($con,$sql3);
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
 			}
 			elseif(empty($idchat))
 			{
 				$sql = "INSERT INTO status (`id`,`status`) VALUES ('$chatid','9')";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
 			}
 		break;
@@ -482,13 +482,13 @@ function prosesPesanTeks($message)
 			$iduser = $fromid;
 
 			$sql_get_produk = "select * from produk left outer join sub_produk on produk.id_produk = sub_produk.id_produk WHERE nama_produk = '$namaproduk' group by sub_produk.nama_sub_produk";
-			 $result1 = mysql_query($sql_get_produk);
+			 $result1 = mysqli_query($con,$sql_get_produk);
 
 			    $arr = [];
-				if (mysql_num_rows($result1) > 0) {
+				if (mysqli_num_rows($result1) > 0) {
 			    // output data of each row
 				$a = 0;
-			     while($row = mysql_fetch_array($result1)) {
+			     while($row = mysqli_fetch_array($result1)) {
 
 			        $text2 = "Nama Produk = ".$row["nama_sub_produk"]."\nDeskripsi Produk = ".$row["deskripsi_sub_produk"]."\n Harga Produk = ".$row["harga_sub_produk"]."";
 
@@ -519,35 +519,35 @@ function prosesPesanTeks($message)
 			print_r($inpilihandeskripsi);
 			$deskripsi = $inpilihandeskripsi;
            	$sql_get_produk = "select * from sub_produk left outer join(SELECT ukuran.id_ukuran,ukuran.ukuran,satuan.satuan FROM ukuran left outer join satuan on ukuran.id_satuan = satuan.id_satuan) a on sub_produk.id_ukuran = a.id_ukuran WHERE nama_sub_produk='$namaproduk'";
-			 $result1 = mysql_query($sql_get_produk);
+			 $result1 = mysqli_query($con,$sql_get_produk);
 			 print_r($result1);
 			$sql_get_status = "select * from variabel where var_id='$chatid'";
-			$data_status = mysql_fetch_assoc(mysql_query($sql_get_status));
+			$data_status = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status));
 			$var_id = $data_status['var_id'];
 
 			 if(empty($var_id))
 			 {
 				 $arr = [];
-					if (mysql_num_rows($result1) > 0) {
+					if (mysqli_num_rows($result1) > 0) {
 					$a = 0;
-				     while($row = mysql_fetch_array($result1)) {
+				     while($row = mysqli_fetch_array($result1)) {
 				     	 $rows[] = $row;
 				 	}
 				 }
 				$sql = "INSERT INTO variabel (`var_id`,`idproduk`,`nmproduk`,`hargabarang`,`gambar`,`deskripsi`) VALUES ('$chatid',$idsub,'$nmproduk',$hargapr,'$source','$deskripsi')";
-	   			mysql_query($sql);
+	   			mysqli_query($con,$sql);
 			}
 			elseif (!empty($var_id)) 
 			{
 				$arr = [];
-					if (mysql_num_rows($result1) > 0) {
+					if (mysqli_num_rows($result1) > 0) {
 					$a = 0;
-				     while($row = mysql_fetch_array($result1)) {
+				     while($row = mysqli_fetch_array($result1)) {
 				     	 $rows[] = $row;
 				 	}
 				 }
 				 $sql1 = "update variabel set idproduk=$idsub,nmproduk='$nmproduk',hargabarang=$hargapr,gambar='$source',deskripsi='$deskripsi' where var_id='$chatid'";
-				mysql_query($sql1);
+				mysqli_query($con,$sql1);
 			}
 				$no=0;
 			foreach($rows as $row){ 
@@ -568,27 +568,27 @@ function prosesPesanTeks($message)
             $idukuran = ambilidukuran($ukuran);
             print_r($idukuran);
              $sql_get_status = "select * from status where id='$chatid'";
-			$data_status = mysql_fetch_assoc(mysql_query($sql_get_status));
+			$data_status = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status));
 			$idchat = $data_status['id'];
 			if(empty($idchat))
 			{
 	            $sql = "INSERT INTO `status`(`id`,`status`) VALUES ('$chatid','1')";
-				mysql_query($sql);  
+				mysqli_query($con,$sql);  
 			}
 			elseif(!empty($idchat))
 			{
 				 $sql3 = "update status set status='1' where id='$chatid'";
-				 mysql_query($sql3); 
+				 mysqli_query($con,$sql3); 
 			}
             $sql_get_variabel = "select * from variabel where var_id='$chatid'";
-			$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+			$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 			$var_id = $data_variabel['var_id'];
 			$nama_sub = $data_variabel['nmproduk'];
 			$sql_get_id_sub = "SELECT `id_sub_produk` FROM `sub_produk` WHERE `nama_sub_produk` = '$nama_sub' AND `id_ukuran` = $idukuran";
-			$data_sub = mysql_fetch_assoc(mysql_query($sql_get_id_sub));
+			$data_sub = mysqli_fetch_assoc(mysqli_query($con,$sql_get_id_sub));
 			$id_sub = $data_sub['id_sub_produk'];
 			 $sql1 = "update `variabel` set ukuran=$idukuran,idproduk=$id_sub where var_id=$chatid";
-            mysql_query($sql1); 
+            mysqli_query($con,$sql1); 
             $text = "Masukkan jumlah barang yang ingin dipesan 👇";
             sendApiKeyboard($chatid,$batalkan,false,$text);
 
@@ -604,7 +604,7 @@ function prosesPesanTeks($message)
 
         case $pesan == 'Kembali':
         	$sql = "update status set status='1' where id='$chatid'";
-			mysql_query($sql); 
+			mysqli_query($con,$sql); 
         	$text = "Masukkan jumlah barang yang ingin dipesan 👇";
             sendApiKeyboard($chatid,$batalkan,false,$text);    	
         break;
@@ -626,37 +626,37 @@ function prosesPesanTeks($message)
 
         case $pesan == '👈Kembali':
         	$sql = "update status set status='2' where id='$chatid'";
-			mysql_query($sql); 
+			mysqli_query($con,$sql); 
         	$text = "Masukkan Nama Pembeli 👇";
             sendApiKeyboard($chatid,$kembalijumlah,false,$text);    	
         break;
 
         case $pesan == '🔙Kembali':
          	$sql = "update status set status='3' where id='$chatid'";
-			mysql_query($sql); 
+			mysqli_query($con,$sql); 
         	$text = "Masukkan Alamat Pembeli 👇";
             sendApiKeyboard($chatid,$kembalinama,false,$text); 
         break;
 
         case $pesan == '🤛Kembali':
          	$sql = "update status set status='8' where id='$chatid'";
-			mysql_query($sql); 
+			mysqli_query($con,$sql); 
         	$text = "Masukkan Nomor Handphone 👇";
             sendApiKeyboard($chatid,$kembalialamat,false,$text); 
         break;
 
         case $pesan == 'Ya,ganti':
 			$sql1 = "update status set status='10' where id='$chatid'";
-			mysql_query($sql1); 
+			mysqli_query($con,$sql1); 
 			$sql = "update variabel set ganti=2 where var_id='$chatid'";
-				mysql_query($sql); 
+				mysqli_query($con,$sql); 
 			$text = "Masukkan nomor HP yang baru 👇";
 			sendApiKeyboard($chatid,$kembalinope,false,$text);
         break;
 
         case $pesan == 'Tidak,ganti':
         	$sql_get_variabel = "select * from `variabel` where `var_id`='$chatid'";
-			$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+			$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 			$namanama = $data_variabel['nama'];
 			$jumlahpesanan = $data_variabel['jumlahpesanan'];
 			$nmproduk = $data_variabel['nmproduk'];
@@ -672,7 +672,7 @@ function prosesPesanTeks($message)
 
 
 			$sql_get_info = "select * from `konsumen` where `no_hp`='$nono'";
-			$data_info = mysql_fetch_assoc(mysql_query($sql_get_info));
+			$data_info = mysqli_fetch_assoc(mysqli_query($con,$sql_get_info));
 			$nama = $data_info['nama_konsumen'];
 			$alamat = $data_info['alamat_konsumen'];
 			$nohp2 = $data_info['no_hp'];
@@ -691,7 +691,7 @@ function prosesPesanTeks($message)
           		),
         	);
         	$sql = "update variabel set total=$total,ganti=1 where var_id='$chatid'";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 			$text2 = "Pilih metode pembayaran yang akan anda gunakan";
          	sendApiKeyboard($chatid,$kembalinope,false,$text2);
 			sendApiPhotoInfo($chatid,$gambar);
@@ -730,7 +730,7 @@ function prosesPesanTeks($message)
 			print_r($inpilihan);
 
 	    	$sql = "update variabel set messageidprov1='$messageid' where var_id=$chatid";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 	    	sendApiKeyboard($chatid,$inpilihan,true,$text7);
 	    	sendApiKeyboard($chatid,$next,false,$text8);
     	break;
@@ -796,7 +796,7 @@ function prosesPesanTeks($message)
 			$text8 = "Tekan Next untuk memilih provinsi yang lainnya\nHarap tunggu setelah memilih";
 			print_r($inpilihan);
 			$sql = "update variabel set messageidprov2='$messageid' where var_id=$chatid";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 	    	sendApiKeyboard($chatid,$inpilihan,true,$text7);
 	    	sendApiKeyboard($chatid,$next,false,$text8);
     	break;
@@ -829,7 +829,7 @@ function prosesPesanTeks($message)
 			$text8 = "Tekan Back untuk kembali\nHarap tunggu setelah memilih";
 			print_r($inpilihan);
 			$sql = "update variabel set messageidprov2='$messageid' where var_id=$chatid";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 	    	sendApiKeyboard($chatid,$inpilihan,true,$text7);
 	    	sendApiKeyboard($chatid,$back,false,$text8);
     	break;
@@ -862,7 +862,7 @@ function prosesPesanTeks($message)
 			print_r($inpilihan);
 
 	    	$sql = "update variabel set messageidprov3='$messageid' where var_id=$chatid";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 	    	sendApiKeyboard($chatid,$inpilihan,true,$text7);
 	    	sendApiKeyboard($chatid,$next2,false,$text8);
 	    	// sendApiMsg($chatid,$messageid);
@@ -879,11 +879,11 @@ function prosesPesanTeks($message)
 			$prov = $a1;
 	   		$text = "Anda memilih ".$a1." sebagai Provinsi Tujuan\nSilahkan lanjutkan dengan menekan tombol Kabupaten\nJika Ingin Kembali Memilih Provinsi, Tekan Tombol Provinsi";
 	   		$sql = "update variabel set idprov=$kodepro,namaprov='$prov' where var_id=$chatid";
-	   		mysql_query($sql); 
+	   		mysqli_query($con,$sql); 
 	   		$output = print_r($a1, true);
 			file_put_contents('file.log', $output);
 			$sql = "update variabel set messageidprov='$messageid' where var_id=$chatid";
-			mysql_query($sql);  
+			mysqli_query($con,$sql);  
 			
 	        sendApiKeyboard($chatid,$kabupaten,false,$text);
 	   		break;
@@ -891,7 +891,7 @@ function prosesPesanTeks($message)
 	   	case $pesan == 'Kabupaten':
 	   		global $kodepro;
 	   		$sql_get_status = "select * from variabel where var_id=$chatid";
-			$data_status = mysql_fetch_assoc(mysql_query($sql_get_status));
+			$data_status = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status));
 			$kodepro = $data_status['idprov'];
 	   		$a1 = json_decode(sendOngkirKota($kodepro));
 	   		$a1  = json_encode($a1);
@@ -932,7 +932,7 @@ function prosesPesanTeks($message)
 	    	$kabup = $a12->rajaongkir->destination_details->city_name;
 	    	
 			$sql_get_variabel = "select * from variabel where var_id='$chatid'";
-			$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+			$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 			$hargabarang = $data_variabel['hargabarang2'];
 			$gambar = $data_variabel['gambar'];
 			$nama = $data_variabel['nama'];
@@ -962,7 +962,7 @@ function prosesPesanTeks($message)
         	);
 	    	
         	$sql = "update variabel set idkab=$kodekb,namakabup='$kabup',total=$total,ongkir=$ongkir,messageidkab='$messageid' where var_id=$chatid";
-			mysql_query($sql); 
+			mysqli_query($con,$sql); 
 
 			"\n\n\n\n\n\n\n".print_r($a2);
 			$text2 = "Pilih metode pembayaran yang akan anda gunakan";
@@ -973,7 +973,7 @@ function prosesPesanTeks($message)
 
 		 case $pesan == 'kartukredit':
 		 		$sql_get_variabel = "select * from variabel where var_id=$chatid";
-				$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+				$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 				$hargabarang = $data_variabel['hargabarang2'];
 				$gambar = $data_variabel['gambar'];
 				$nmproduk = $data_variabel['nmproduk'];
@@ -992,7 +992,7 @@ function prosesPesanTeks($message)
 			    $currency = 'IDR';
 			    sendInvoice($chatid,$nmproduk,$deskripsi,$payload,$provider,$parameter,$currency,json_encode($LabeledPrice),$gambar);
 			    $sql = "update variabel set messageidpesanan='$messageid' where var_id=$chatid";
-			    mysql_query($sql);
+			    mysqli_query($con,$sql);
 		 break;
 
 		case $pesan == 'transfer';
@@ -1001,7 +1001,7 @@ function prosesPesanTeks($message)
 			$text = "Pilihan banknya yaitu 👇";
 			$text2 = "Pilih bank yang akan menjadi tempat pembayaran Anda";
 			$sql = "update variabel set messageidpesanan='$messageid' where var_id=$chatid";
-			mysql_query($sql); 
+			mysqli_query($con,$sql); 
 			sendApiKeyboard($chatid,$mainmenu,false,$text2);
 			sendApiKeyboard($chatid,$pilihanbank,true,$text);
 
@@ -1014,14 +1014,14 @@ function prosesPesanTeks($message)
 			$idbank = ambilidbank($namabank);
 			$namapemilik = ambilnamapemilik($namabank);
 			$sql = "update variabel set idbank=$idbank where var_id=$chatid";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 			$sql_get_variabel = "select * from variabel where var_id=$chatid";
-			$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+			$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 			$namafix = $data_variabel['nama'];
 			$ganti = $data_variabel['ganti'];
 			$nono = $data_variabel['no_ganti'];
 			$sql_get_info = "select * from `konsumen` where `no_hp`='$nono'";
-			$data_info = mysql_fetch_assoc(mysql_query($sql_get_info));
+			$data_info = mysqli_fetch_assoc(mysqli_query($con,$sql_get_info));
 			$nama1 = $data_info['nama_konsumen'];
 			$alamat = $data_info['alamat_konsumen'];
 			$nohp2 = $data_info['no_hp'];
@@ -1032,16 +1032,16 @@ function prosesPesanTeks($message)
 			if (!empty($nohp2) && $ganti == 1) 
 			{
 				$sql = "update variabel set idbank=$idbank where var_id=$chatid";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 				$sql_get_variabel = "select * from variabel where var_id=$chatid";
-				$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+				$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 				$hargabarang = $data_variabel['hargabarang2'];
 				$nmproduk = $data_variabel['nmproduk'];
 				$jumlahpesanan = $data_variabel['jumlahpesanan'];
 				$ukuran = $data_variabel['ukuran'];
 				$total = $ongkir + $hargabarang;
 				$sql = "update variabel set messageidbank='$messageid' where var_id=$chatid";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 
 				$namaukuran = ambilnamaukuran($ukuran);
 				$idsatuan = ambilidsatuandariukuran($ukuran);
@@ -1060,9 +1060,9 @@ function prosesPesanTeks($message)
 			elseif (!empty($nohp2) && $ganti == 2)
 			{
 				$sql = "update variabel set idbank=$idbank where var_id=$chatid";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 				$sql_get_variabel = "select * from variabel where var_id=$chatid";
-				$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+				$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 				$hargabarang = $data_variabel['hargabarang2'];
 				$nmproduk = $data_variabel['nmproduk'];
 				$jumlahpesanan = $data_variabel['jumlahpesanan'];
@@ -1075,7 +1075,7 @@ function prosesPesanTeks($message)
 				$nohp = $data_variabel['nohp'];
 				$ukuran = $data_variabel['ukuran'];
 				$sql = "update variabel set messageidbank='$messageid' where var_id=$chatid";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 
 				$namaukuran = ambilnamaukuran($ukuran);
 				$idsatuan = ambilidsatuandariukuran($ukuran);
@@ -1094,9 +1094,9 @@ function prosesPesanTeks($message)
 			elseif(empty($nohp2))
 			{
 				$sql = "update variabel set idbank=$idbank where var_id=$chatid";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 				$sql_get_variabel = "select * from variabel where var_id=$chatid";
-				$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+				$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 				$hargabarang = $data_variabel['hargabarang2'];
 				$nmproduk = $data_variabel['nmproduk'];
 				$jumlahpesanan = $data_variabel['jumlahpesanan'];
@@ -1110,7 +1110,7 @@ function prosesPesanTeks($message)
 				$nohp = $data_variabel['nohp'];
 				$ukuran = $data_variabel['ukuran'];
 				$sql = "update variabel set messageidbank='$messageid' where var_id=$chatid";
-				mysql_query($sql);
+				mysqli_query($con,$sql);
 
 				$namaukuran = ambilnamaukuran($ukuran);
 				$idsatuan = ambilidsatuandariukuran($ukuran);
@@ -1132,7 +1132,7 @@ function prosesPesanTeks($message)
 
 			$idorder = rand(1,99999999);
 			$sql_get_variabel = "select * from variabel where var_id=$chatid";
-			$data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+			$data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 			$hargabarang = $data_variabel['hargabarang2'];
 			$gambar = $data_variabel['gambar'];
 			$nama = $data_variabel['nama'];
@@ -1155,7 +1155,7 @@ function prosesPesanTeks($message)
 			$nonolm = $data_variabel['no_lama'];	
 
 			$sql_ceknama = "select * from konsumen where no_hp='$nono'";
-			$data_ceknama = mysql_fetch_assoc(mysql_query($sql_ceknama));
+			$data_ceknama = mysqli_fetch_assoc(mysqli_query($con,$sql_ceknama));
 			$adanama = $data_ceknama['nama_konsumen'];
 			$idkonsumen = $data_ceknama['id_konsumen'];
 			$ongkir = $data_ceknama['ongkir'];
@@ -1163,20 +1163,20 @@ function prosesPesanTeks($message)
 			if(empty($nono))
 			{	
 				$sql3 = "INSERT INTO `konsumen`(`id_konsumen`, `id_order`, `nama_konsumen`, `alamat_konsumen`, `provinsi`, `kabupaten`, `id_telegram`,`no_hp`,`ongkir`) VALUES (Null,$idorder,'$nama','$alamat','$prov','$kabup',Null,'$nohp',$ongkir2)";
-				$result3 = mysql_query($sql3);
+				$result3 = mysqli_query($con,$sql3);
 
 				$sql_id_kons = "select * from konsumen where nama_konsumen='$nama' && no_hp='$nohp'";
-				$data_cekid = mysql_fetch_assoc(mysql_query($sql_id_kons));
+				$data_cekid = mysqli_fetch_assoc(mysqli_query($con,$sql_id_kons));
 				$idkonsumen9 = $data_cekid['id_konsumen'];
 
 				$sql = "INSERT INTO `order`(`id_order`, `id_sub_produk`, `id_ukuran`,`id_konsumen`, `id_bank`,`tanggal_orderan`,`status_pemesanan`,`no_resi`) VALUES ($idorder,$idproduk2,$ukuran,$idkonsumen9,$idbank,CURRENT_TIMESTAMP,'Belum Dikonfirmasi',Null)";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				
 				print_r("\n\n".$sql."");
 				$sql2 = "INSERT INTO `detail_order`(`id_order`,`kuantitas`,`total`) VALUES ($idorder,$jumlahpesanan,$total)";
-				$result2 = mysql_query($sql2);
+				$result2 = mysqli_query($con,$sql2);
 				$sql4 = "UPDATE `sub_produk` SET `jumlah_sub_produk`= jumlah_sub_produk - $jumlahpesanan WHERE id_sub_produk=$idproduk2";
-				$result4 = mysql_query($sql4);
+				$result4 = mysqli_query($con,$sql4);
 				print_r($sql4);
 				$text = "Terima Kasih telah melakukan pemesanan di Toko Aneka Sutra\n\nSegera lakukan pembayaran ke nomor rekening tujuan dengan menyertakan Kode Pemesanan '$idorder'\n\nSetelah itu lakukan Konfirmasi pesanan pada 🔙 Main Menu dengan menekan tombol Konfirmasi Pesanan";
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
@@ -1190,13 +1190,13 @@ function prosesPesanTeks($message)
 			}
 			elseif (!empty($nono) && $ganti == 1) {
 				$sql = "INSERT INTO `order`(`id_order`, `id_sub_produk`, `id_ukuran`,`id_konsumen`, `id_bank`,`tanggal_orderan`,`status_pemesanan`,`no_resi`) VALUES ($idorder,$idproduk2,$ukuran,$idkonsumen,$idbank,CURRENT_TIMESTAMP,'Belum Dikonfirmasi',Null)";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				print_r("\n\n".$sql."");
 				$sql2 = "INSERT INTO `detail_order`(`id_detail`,`id_order`,`kuantitas`,`total`) VALUES (NULL,$idorder,$jumlahpesanan,$total)";
-				$result2 = mysql_query($sql2);
+				$result2 = mysqli_query($con,$sql2);
 				print_r("\n\n".$sql2."");
 				$sql4 = "UPDATE `sub_produk` SET `jumlah_sub_produk`= jumlah_sub_produk - $jumlahpesanan WHERE id_sub_produk=$idproduk2";
-				$result4 = mysql_query($sql4);
+				$result4 = mysqli_query($con,$sql4);
 				print_r($sql4);
 				$text = "Terima Kasih telah melakukan pemesanan di Toko Aneka Sutra\n\nSegera lakukan pembayaran ke nomor rekening tujuan dengan menyertakan Kode Pemesanan '$idorder'\n\nSetelah itu lakukan Konfirmasi pesanan pada 🔙 Main Menu dengan menekan tombol Konfirmasi Pesanan";
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
@@ -1211,14 +1211,14 @@ function prosesPesanTeks($message)
 			elseif (!empty($nono) && $ganti == 2) 
 			{
 				$sql = "INSERT INTO `order`(`id_order`, `id_sub_produk`, `id_ukuran`,`id_konsumen`, `id_bank`,`tanggal_orderan`,`status_pemesanan`,`no_resi`) VALUES ($idorder,$idproduk2,$ukuran,$idkonsumen,$idbank,CURRENT_TIMESTAMP,'Belum Dikonfirmasi',Null)";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				print_r("\n\n".$sql."");
 				$sql2 = "INSERT INTO `detail_order`(`id_detail`,`id_order`,`kuantitas`,`total`) VALUES (NULL,$idorder,$jumlahpesanan,$total)";
-				$result2 = mysql_query($sql2);
+				$result2 = mysqli_query($con,$sql2);
 				$sql3 = "UPDATE `konsumen` SET `nama_konsumen`='$nama',`alamat_konsumen`='$alamat',`no_hp`='$nohp',`provinsi`='$prov',`kabupaten`='$kabup',`ongkir`=$ongkir2 WHERE `no_hp`='$nonolm'";
-				$result3 = mysql_query($sql3);
+				$result3 = mysqli_query($con,$sql3);
 				$sql4 = "UPDATE `sub_produk` SET `jumlah_sub_produk`= jumlah_sub_produk - $jumlahpesanan WHERE id_sub_produk=$idproduk2";
-				$result4 = mysql_query($sql4);
+				$result4 = mysqli_query($con,$sql4);
 				print_r($sql4);
 				$text = "Terima Kasih telah melakukan pemesanan di Toko Aneka Sutra\n\nSegera lakukan pembayaran ke nomor rekening tujuan dengan menyertakan Kode Pemesanan '$idorder'\n\nSetelah itu lakukan Konfirmasi pesanan pada 🔙 Main Menu dengan menekan tombol Konfirmasi Pesanan";
 				sendApiKeyboard($chatid,$mainmenu,false,$text);
@@ -1236,7 +1236,7 @@ function prosesPesanTeks($message)
 
 		case $pesan == 'Konfirmasi Pesanan';
 			$sql = "update status set status='4' where id='$chatid'";
-			mysql_query($sql);
+			mysqli_query($con,$sql);
 			// sendApiMsg($chatid,$sql);
 			$text = "Masukkan kode pemesanan";
 			sendApiMsg($chatid,$text);
@@ -1244,10 +1244,10 @@ function prosesPesanTeks($message)
 
         default:
         $sql_get_status = "select * from status where id='$chatid'";
-		$data_status = mysql_fetch_assoc(mysql_query($sql_get_status));
+		$data_status = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status));
 		$status = $data_status['status'];
 		$sql_get_status1 = "select * from variabel where var_id=$chatid";
-		$data_status1 = mysql_fetch_assoc(mysql_query($sql_get_status1));
+		$data_status1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status1));
 		$hargabr = $data_status1['hargabarang'];
         if($status == 1)
         {
@@ -1256,11 +1256,11 @@ function prosesPesanTeks($message)
             print_r($jumlahbrng);
             $hargabarang1 = $jumlahbrng * $hargabr;
 			$sql1 = "update variabel set jumlahpesanan=$jumlahbrng, hargabarang2=$hargabarang1 where var_id=$chatid";
-			mysql_query($sql1); 
+			mysqli_query($con,$sql1); 
             $jumlahbrngkredit = $jumlahbrng;
             $jumlahbrngatm = $jumlahbrng;
              $sql_get_status1 = "select * from variabel where var_id='$chatid'";
-			$data_status1 = mysql_fetch_assoc(mysql_query($sql_get_status1));
+			$data_status1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status1));
 			$idproduk2 = $data_status1['idproduk'];
             $stokbrng = ambiljumlah($idproduk2);
             $output = print_r($fromid, true);
@@ -1269,7 +1269,7 @@ function prosesPesanTeks($message)
 			    	{
 			    		 $text = "Masukkan Nomor HP Pembeli 👇";
 			    		 $sql = "update status set status='8' where id='$chatid'";
-						 mysql_query($sql); 
+						 mysqli_query($con,$sql); 
 				         sendApiKeyboard($chatid,$kembalijumlah,false,$text);
 			      	}
 		      	elseif( strval($jumlahbrng) != strval(intval($jumlahbrng)) )
@@ -1288,9 +1288,9 @@ function prosesPesanTeks($message)
 		    	preg_match('/^(.*)/',$pesan,$hasil);
 		    	$nama = $hasil[1];
 					$sql = "update variabel set nama='$nama' where var_id=$chatid";
-					mysql_query($sql); 
+					mysqli_query($con,$sql); 
 					$sql1 = "update status set status='3' where id='$chatid'";
-					 mysql_query($sql1); 
+					 mysqli_query($con,$sql1); 
 			    	$namakredit = $nama;
 			    	$namaatm = $nama;
 			    	$text = "Masukkan Alamat Pembeli 👇";
@@ -1303,7 +1303,7 @@ function prosesPesanTeks($message)
 		    	$alamat = $hasil[1];
 		    	print_r($alamat);
 		    	$sql = "update variabel set alamat='$alamat' where var_id=$chatid";
-				mysql_query($sql); 
+				mysqli_query($con,$sql); 
 
 		    	$text = "Lanjutkan dengan menekan tombol Provinsi untuk memilih provinsi tujuan barang";
 		    	sendApiKeyboard($chatid,$provinsi,false,$text); 
@@ -1314,7 +1314,7 @@ function prosesPesanTeks($message)
 		    	preg_match('/^(.*)/',$pesan,$hasil);
 		    	$idorderkonfirmasi = $hasil[1];
 		    	$sql_get_order = "select `id_order` from `order` where `id_order`=$idorderkonfirmasi";
-				$data_order = mysql_fetch_assoc(mysql_query($sql_get_order));
+				$data_order = mysqli_fetch_assoc(mysqli_query($con,$sql_get_order));
 				$order1 = $data_order['id_order']; 
 		    	$output = print_r($order1, true);
 				file_put_contents('file.log', $output);
@@ -1327,9 +1327,9 @@ function prosesPesanTeks($message)
 		    	elseif(!empty($order1))
 		    	{
 			    	$sql = "UPDATE `variabel` set `idkonf`='$idorderkonfirmasi' WHERE `var_id`='$chatid'";
-		   			mysql_query($sql); 
+		   			mysqli_query($con,$sql); 
 		   			$sql1 = "update status set status='7' where id='$chatid'";
-					 mysql_query($sql1); 	   			
+					 mysqli_query($con,$sql1); 	   			
 			    	$text = "Masukkan nomor rekening tujuan 👇";
 			        sendApiMsg($chatid,$text);
 		   		}
@@ -1347,12 +1347,12 @@ function prosesPesanTeks($message)
 		    	preg_match('/^(.*)/',$pesan,$hasil);
 		    	$rekeningpem = $hasil[1];
 		    	$sql1 = "update status set status='7' where id='$chatid'";
-				 mysql_query($sql1); 	   
+				 mysqli_query($con,$sql1); 	   
 		    	$sql_get_status1 = "select * from variabel where var_id=$chatid";
-				$data_status1 = mysql_fetch_assoc(mysql_query($sql_get_status1));
+				$data_status1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status1));
 				$idorderkonfirmasi = $data_status1['idkonf'];
 		    	$sql = "UPDATE `konsumen` SET nomor_rekening_konsumen = $rekeningpem WHERE id_order = $idorderkonfirmasi";
-				$result = mysql_query($sql);
+				$result = mysqli_query($con,$sql);
 				print_r($sql);
 		        $text = "Masukkan nomor rekening tujuan 👇";
 		        sendApiMsg($chatid,$text);
@@ -1363,12 +1363,12 @@ function prosesPesanTeks($message)
 		    	 global $rekeningtuj;
 		         $rekeningtuj = $hasil[1];
 		         $sql_get_variabel = "select * from rekening_tujuan where nomor_rekening=$rekeningtuj";
-				 $data_variabel = mysql_fetch_assoc(mysql_query($sql_get_variabel));
+				 $data_variabel = mysqli_fetch_assoc(mysqli_query($con,$sql_get_variabel));
 				 $idbank = $data_variabel['id_bank'];
 				if(!empty($idbank) && is_numeric($rekeningtuj) )
 				{
 				 $sql = "update variabel set rekeningtuj='$rekeningtuj' where var_id=$chatid";
-				 mysql_query($sql); 
+				 mysqli_query($con,$sql); 
 		         $text = "kirimkan foto bukti transfer/pemesanan dalam bentuk JPG";
 		         sendApiMsg($chatid,$text);
 				}
@@ -1386,15 +1386,15 @@ function prosesPesanTeks($message)
 		     	$nohp2 = strlen("$nohp");
 
 		     	$sql_ceknope = "select no_hp from konsumen where no_hp='$nohp'";
-				$data_ceknope = mysql_fetch_assoc(mysql_query($sql_ceknope));
+				$data_ceknope = mysqli_fetch_assoc(mysqli_query($con,$sql_ceknope));
 				$no_hpbaru = $data_ceknope['no_hp'];
 
 				if($nohp2 = is_numeric($nohp) && $nohp2 >= 11 && empty($no_hpbaru))
 				{
 					   	$sql = "update variabel set nohp='$nohp' where var_id=$chatid";
-						mysql_query($sql); 
+						mysqli_query($con,$sql); 
 						$sql1 = "update status set status='2' where id='$chatid'";
-						mysql_query($sql1); 
+						mysqli_query($con,$sql1); 
 						$text = "Masukkan Nama Pembeli 👇";
 			    		sendApiKeyboard($chatid,$kembalinope,false,$text);
 			    }
@@ -1408,7 +1408,7 @@ function prosesPesanTeks($message)
           					),
         			);
 					$sql1 = "update variabel set no_ganti='$nohp', no_lama='$nohp' where var_id=$chatid";
-					mysql_query($sql1);  
+					mysqli_query($con,$sql1);  
 
 					$text = "Apakah anda ingin mengganti informasi Nomor Handphone,Nama dan serta Alamat Anda?";
 					$text1 = "Jika ingin mengganti, maka tekan tombol 'Ya' dan Jika tidak tekan tombol 'Tidak'";
@@ -1428,7 +1428,7 @@ function prosesPesanTeks($message)
 		     	$kodetransaksi = $hasil[1];
 
 		     	$sql_get_order1 = "select * from `order` where `id_order`=$kodetransaksi";
-				$data_order1 = mysql_fetch_assoc(mysql_query($sql_get_order1));
+				$data_order1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_order1));
 				$idorder1 = $data_order1['id_order'];
 				$idproduk1 = $data_order1['id_produk'];
 				$tglorderan1 = $data_order1['tanggal_orderan'];
@@ -1437,12 +1437,12 @@ function prosesPesanTeks($message)
 				$noresi1 = $data_order1['no_resi'];
 
 				$sql_get_produk1 = "select * from `produk` where `id_produk`=$idproduk1";
-				$data_produk1 = mysql_fetch_assoc(mysql_query($sql_get_produk1));
+				$data_produk1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_produk1));
 				$linkgambar = $data_produk1['images'];
 				$namaproduk1 = $data_produk1['nama_produk'];
 
 				$sql_get_konsumen1 = "select * from `konsumen` where `id_konsumen`=$idkonsumen1";
-				$data_konsumen1 = mysql_fetch_assoc(mysql_query($sql_get_konsumen1));
+				$data_konsumen1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_konsumen1));
 				$nama_konsumen1 = $data_konsumen1['nama_konsumen'];
 				$alamat_konsumen1 = $data_konsumen1['alamat_konsumen'];
 				$kabupaten1 = $data_konsumen1['kabupaten'];
@@ -1450,7 +1450,7 @@ function prosesPesanTeks($message)
 				$no_hp1 = $data_konsumen1['no_hp'];
 
 				$sql_get_detail1 = "select * from `detail_order` where `id_order`=$kodetransaksi";
-				$data_detail1 = mysql_fetch_assoc(mysql_query($sql_get_detail1));
+				$data_detail1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_detail1));
 				$kuantitas1 = $data_detail1['kuantitas'];
 				$total1 = $data_detail1['total'];
 			
@@ -1475,11 +1475,11 @@ function prosesPesanTeks($message)
 		     	$nohp2 = strlen("$nohp");
 
 		     	$sql = "select no_hp from konsumen where no_hp='$nohp'";
-		     	$data = mysql_fetch_assoc(mysql_query($sql));
+		     	$data = mysqli_fetch_assoc(mysqli_query($con,$sql));
 		     	$nope = $data['no_hp'];
 
 		     	$sql_get_status1 = "select * from variabel where var_id='$chatid'";
-				$data_status1 = mysql_fetch_assoc(mysql_query($sql_get_status1));
+				$data_status1 = mysqli_fetch_assoc(mysqli_query($con,$sql_get_status1));
 				$ganti = $data_status1['ganti'];
 
 				
@@ -1491,9 +1491,9 @@ function prosesPesanTeks($message)
 				elseif($nohp2 = is_numeric($nohp) && $nohp2 >= 11 && $ganti = 2) 
 				{
 						$sql = "update variabel set nohp='$nohp' where var_id=$chatid";
-						mysql_query($sql); 
+						mysqli_query($con,$sql); 
 						$sql1 = "update status set status='2' where id='$chatid'";
-						mysql_query($sql1); 
+						mysqli_query($con,$sql1); 
 						$text = "Masukkan Nama Pembeli 👇";
 			    		sendApiKeyboard($chatid,$kembalinope,false,$text);
 				}
@@ -1513,15 +1513,15 @@ function cekpilihan($kode,$kiriman=null){
 	global $tabel;
 	$tabeln = $tabel[$kode];
 	$sql = "select id_produk, nama_produk from produk where kategori_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	print_r($result);
 	$arrnama = array();
 	$arrid = array();
 	$arr = [];
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
     // output data of each row
 	$i=0;
-     while($row = mysql_fetch_array($result)) {
+     while($row = mysqli_fetch_array($result)) {
         $arr[$i]["text"]= $row["nama_produk"];
         $arr[$i]["callback_data"]= $kode.$row["nama_produk"];
         $i++;
@@ -1547,9 +1547,9 @@ function cekpilihan($kode,$kiriman=null){
 
 function ambilgambar($kiriman=null){
 	$sql = "select images from sub_produk where nama_sub_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$inpilihangambar = $data['images'];
 		return $inpilihangambar;
 	}
@@ -1557,9 +1557,9 @@ function ambilgambar($kiriman=null){
 
 function ambilidsub($kiriman=null){
 	$sql = "select id_sub_produk from sub_produk where nama_sub_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$idsub = $data['id_sub_produk'];
 		return $idsub;
 	}
@@ -1567,9 +1567,9 @@ function ambilidsub($kiriman=null){
 
 function ambilidukuran($kiriman=null){
 	$sql = "select id_ukuran from ukuran where ukuran='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$idukuran = $data['id_ukuran'];
 		return $idukuran;
 	}
@@ -1577,9 +1577,9 @@ function ambilidukuran($kiriman=null){
 
 function ambilnamaukuran($kiriman=null){
 	$sql = "select ukuran from ukuran where id_ukuran=$kiriman";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$namaukuran = $data['ukuran'];
 		return $namaukuran;
 	}
@@ -1587,9 +1587,9 @@ function ambilnamaukuran($kiriman=null){
 
 function ambilnamasatuan($kiriman=null){
 	$sql = "select satuan from satuan where id_satuan=$kiriman";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$namasatuan = $data['satuan'];
 		return $namasatuan;
 	}
@@ -1598,9 +1598,9 @@ function ambilnamasatuan($kiriman=null){
 
 function ambilidsatuandariukuran($kiriman=null){
 	$sql = "select id_satuan from ukuran where id_ukuran=$kiriman";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$idsatuan = $data['id_satuan'];
 		return $idsatuan;
 	}
@@ -1609,9 +1609,9 @@ function ambilidsatuandariukuran($kiriman=null){
 function ambilnamabarang($kiriman=null)
 {
 	$sql = "select nama_sub_produk from sub_produk where nama_sub_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$inpilihannamaproduk = $data['nama_sub_produk'];
 		return $inpilihannamaproduk;
 	}
@@ -1621,10 +1621,10 @@ function ambilnamabarang($kiriman=null)
 function ambilid($kiriman=null)
 {
 	$sql = "select id_sub_produk from sub_produk where nama_sub_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	print_r($result);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$inpilihanidprodukk = $data['id_sub_produk'];
 		print_r($inpilihanidprodukk);
 		return $inpilihanidprodukk;
@@ -1635,9 +1635,9 @@ function ambilid($kiriman=null)
 function ambildeskripsibarang($kiriman=null)
 {
 	$sql = "select deskripsi_sub_produk from sub_produk where nama_sub_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$inpilihandeskripsi = $data['deskripsi_sub_produk'];
 		return $inpilihandeskripsi;
 	}
@@ -1647,9 +1647,9 @@ function ambildeskripsibarang($kiriman=null)
 function ambilhargabarang($kiriman=null)
 {
 	$sql = "select harga_sub_produk from sub_produk where nama_sub_produk='$kiriman'";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	if(!empty($result)){
-		$data = mysql_fetch_assoc($result);
+		$data = mysqli_fetch_assoc($result);
 		$inpilihanharga = $data['harga_sub_produk'];
 		return $inpilihanharga;
 	}
@@ -1659,10 +1659,10 @@ function ambilhargabarang($kiriman=null)
 function ambiljumlah($kiriman){
 	// global $jumlahbaru;
 	$sql1 = "SELECT `jumlah_sub_produk` from `sub_produk` where id_sub_produk=$kiriman";
-	$result2 = mysql_query($sql1);
+	$result2 = mysqli_query($con,$sql1);
 	print_r("\n\nini adalah ".$result2);
 	if(!empty($result2)){
-			$data = mysql_fetch_assoc($result2);
+			$data = mysqli_fetch_assoc($result2);
 			$jumlahbaru = $data['jumlah_sub_produk'];
 			print_r($jumlahbaru);
 			return $jumlahbaru;
@@ -1674,15 +1674,15 @@ function pilihanbank(){
 	$tabeln = $tabel[$kode];
 	$kode2 = "Anda Memilih Bank ";
 	$sql = "select `id_bank`, `nama_bank` from `rekening_tujuan` WHERE not id_bank=10";
-	$result = mysql_query($sql);
+	$result = mysqli_query($con,$sql);
 	print_r($result);
 	$arrnama = array();
 	$arrid = array();
 	$arr = [];
-	if (mysql_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) {
     // output data of each row
 	$i=0;
-     while($row = mysql_fetch_array($result)) {
+     while($row = mysqli_fetch_array($result)) {
         $arr[$i]["text"]= $row["nama_bank"];
         $arr[$i]["callback_data"]= $kode2.$row["nama_bank"];
         $i++;
@@ -1709,10 +1709,10 @@ function pilihanbank(){
 function ambilnomorekening($kiriman){
 	// global $jumlahbaru;
 	$sql1 = "SELECT `nomor_rekening` from `rekening_tujuan` where nama_bank='$kiriman'";
-	$result2 = mysql_query($sql1);
+	$result2 = mysqli_query($con,$sql1);
 	print_r("\n\nini adalah ".$result2);
 	if(!empty($result2)){
-			$data = mysql_fetch_assoc($result2);
+			$data = mysqli_fetch_assoc($result2);
 			$nomor = $data['nomor_rekening'];
 			print_r($nomor);
 			return $nomor;
@@ -1721,10 +1721,10 @@ function ambilnomorekening($kiriman){
 
 function ambilidbank($kiriman){
 	$sql1 = "SELECT `id_bank` from `rekening_tujuan` where nama_bank='$kiriman'";
-	$result2 = mysql_query($sql1);
+	$result2 = mysqli_query($con,$sql1);
 	print_r("\n\nini adalah ".$result2);
 	if(!empty($result2)){
-			$data = mysql_fetch_assoc($result2);
+			$data = mysqli_fetch_assoc($result2);
 			$idbankk = $data['id_bank'];
 			print_r($nomor);
 			return $idbankk;
@@ -1733,10 +1733,10 @@ function ambilidbank($kiriman){
 
 function ambilnamapemilik($kiriman){
 	$sql1 = "SELECT `nama_pemilik` from `rekening_tujuan` where nama_bank='$kiriman'";
-	$result2 = mysql_query($sql1);
+	$result2 = mysqli_query($con,$sql1);
 	print_r("\n\nini adalah ".$result2);
 	if(!empty($result2)){
-			$data = mysql_fetch_assoc($result2);
+			$data = mysqli_fetch_assoc($result2);
 			$namapemilik = $data['nama_pemilik'];
 			print_r($nomor);
 			return $namapemilik;

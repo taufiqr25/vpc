@@ -64,10 +64,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '4p3lm4l4ng',
-	'database' => 'toko_tradisional',
+	'hostname' => 'vpc.cbckdflvmsrf.us-east-1.rds.amazonaws.com',
+	'username' => 'admin',
+	'password' => '12345678',
+	'database' => 'db_vpc',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
