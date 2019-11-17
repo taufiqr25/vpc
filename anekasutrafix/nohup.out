@@ -1,0 +1,6 @@
+Could not open input file: bot
+./bot.php: 1: ./bot.php: cannot open ?php: No such file
+./bot.php: 2: ./bot.php: require_once: not found
+./bot.php: 3: ./bot.php: require_once: not found
+./bot.php: 4: ./bot.php: require_once: not found
+./bot.php: 6: ./bot.php: Syntax error: "(" unexpected
