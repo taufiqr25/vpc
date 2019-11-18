@@ -272,22 +272,23 @@ function sendApiPhoto($chatid, $fileinfo, $caption, $keyboard){
 
 function sendOngkirProvinsi() {
 
-$curl = curl_init();
-curl_setopt_array($curl, array(
-      CURLOPT_URL => "http://api.rajaongkir.com/starter/province",
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 30,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => "GET",
-      CURLOPT_HTTPHEADER => array(
-        "key: 5b386c499df308e8544b3ca826074ae0"
-      ),
-    ));
+  $curl = curl_init();
 
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://api.rajaongkir.com/starter/province",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => array(
+      "key: 24349f0a5dbad51077a33f697a8db3b6"
+    ),
+  ));
+  
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
     return $response;
 
 }
@@ -298,7 +299,7 @@ $prov;
 
 $curl = curl_init();
 curl_setopt_array($curl, array(
-      CURLOPT_URL => "http://api.rajaongkir.com/starter/city?province=$prov",
+      CURLOPT_URL => "https://api.rajaongkir.com/starter/city?province=$prov",
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => "",
       CURLOPT_MAXREDIRS => 10,
@@ -306,7 +307,7 @@ curl_setopt_array($curl, array(
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => "GET",
       CURLOPT_HTTPHEADER => array(
-        "key: 5b386c499df308e8544b3ca826074ae0"
+        "key: 24349f0a5dbad51077a33f697a8db3b6"
       ),
     ));
 
@@ -320,7 +321,7 @@ function cekongkos($asal,$id_kabupaten,$kurir,$berat){
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => "http://api.rajaongkir.com/starter/cost",
+      CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => "",
       CURLOPT_MAXREDIRS => 10,
@@ -330,7 +331,7 @@ function cekongkos($asal,$id_kabupaten,$kurir,$berat){
       CURLOPT_POSTFIELDS => "origin=".$asal."&destination=".$id_kabupaten."&weight=".$berat."&courier=".$kurir."",
       CURLOPT_HTTPHEADER => array(
         "content-type: application/x-www-form-urlencoded",
-        "key: 5b386c499df308e8544b3ca826074ae0"
+        "key: 24349f0a5dbad51077a33f697a8db3b6"
       ),
     ));
 
